@@ -18,13 +18,13 @@ use Composer\Package\RootPackage;
 use Eloquent\Phony\Phpunit\Phony;
 use PHPUnit_Framework_TestCase;
 
-class BowerBridgeTest extends PHPUnit_Framework_TestCase {
+class GruntBridgeTest extends PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         $this->io = Phony::mock('Composer\IO\IOInterface');
-        $this->vendorFinder = Phony::mock('Peertopark\Composer\BowerBridge\BowerVendorFinder');
-        $this->client = Phony::mock('Peertopark\Composer\BowerBridge\BowerClient');
-        $this->bridge = new BowerBridge($this->io->mock(), $this->vendorFinder->mock(), $this->client->mock());
+        $this->vendorFinder = Phony::mock('Peertopark\Composer\GruntBridge\GruntVendorFinder');
+        $this->client = Phony::mock('Peertopark\Composer\GruntBridge\GruntClient');
+        $this->bridge = new GruntBridge($this->io->mock(), $this->vendorFinder->mock(), $this->client->mock());
 
         $this->composer = new Composer();
 
@@ -34,7 +34,7 @@ class BowerBridgeTest extends PHPUnit_Framework_TestCase {
 
         $this->linkRoot1 = new Link('vendor/package', 'vendorX/packageX');
         $this->linkRoot2 = new Link('vendor/package', 'vendorY/packageY');
-        $this->linkRoot3 = new Link('vendor/package', 'peertopark/composer-bower-bridge');
+        $this->linkRoot3 = new Link('vendor/package', 'peertopark/composer-grunt-bridge');
 
         $this->installationManager = Phony::mock('Composer\Installer\InstallationManager');
         $this->installationManager->getInstallPath($this->packageA)->returns('/path/to/install/a');
@@ -49,7 +49,7 @@ class BowerBridgeTest extends PHPUnit_Framework_TestCase {
         $this->vendorFinder->find($this->composer, $this->bridge)->returns(array($this->packageA, $this->packageB));
         $this->bridge->install($this->composer);
 
-        Phony::inOrder($this->io->write->calledWith('<info>Installing Bower dependencies for root project</info>'), $this->client->install->calledWith(null, true), $this->io->write->calledWith('<info>Installing Bower dependencies for Composer dependencies</info>'), $this->io->write->calledWith('<info>Installing Bower dependencies for vendorA/packageA</info>'), $this->client->install->calledWith('/path/to/install/a', false), $this->io->write->calledWith('<info>Installing Bower dependencies for vendorB/packageB</info>'), $this->client->install->calledWith('/path/to/install/b', false));
+        Phony::inOrder($this->io->write->calledWith('<info>Installing Grunt dependencies for root project</info>'), $this->client->install->calledWith(null, true), $this->io->write->calledWith('<info>Installing Grunt dependencies for Composer dependencies</info>'), $this->io->write->calledWith('<info>Installing Grunt dependencies for vendorA/packageA</info>'), $this->client->install->calledWith('/path/to/install/a', false), $this->io->write->calledWith('<info>Installing Grunt dependencies for vendorB/packageB</info>'), $this->client->install->calledWith('/path/to/install/b', false));
     }
 
     public function testInstallProductionMode() {
@@ -58,7 +58,7 @@ class BowerBridgeTest extends PHPUnit_Framework_TestCase {
         $this->bridge->install($this->composer, false);
 
         Phony::inOrder(
-                $this->io->write->calledWith('<info>Installing Bower dependencies for root project</info>'), $this->client->install->calledWith(null, false), $this->io->write->calledWith('<info>Installing Bower dependencies for Composer dependencies</info>'), $this->io->write->calledWith('<info>Installing Bower dependencies for vendorA/packageA</info>'), $this->client->install->calledWith('/path/to/install/a', false), $this->io->write->calledWith('<info>Installing Bower dependencies for vendorB/packageB</info>'), $this->client->install->calledWith('/path/to/install/b', false)
+                $this->io->write->calledWith('<info>Installing Grunt dependencies for root project</info>'), $this->client->install->calledWith(null, false), $this->io->write->calledWith('<info>Installing Grunt dependencies for Composer dependencies</info>'), $this->io->write->calledWith('<info>Installing Grunt dependencies for vendorA/packageA</info>'), $this->client->install->calledWith('/path/to/install/a', false), $this->io->write->calledWith('<info>Installing Grunt dependencies for vendorB/packageB</info>'), $this->client->install->calledWith('/path/to/install/b', false)
         );
     }
 
@@ -84,7 +84,7 @@ class BowerBridgeTest extends PHPUnit_Framework_TestCase {
         $this->bridge->install($this->composer);
 
         Phony::inOrder(
-                $this->io->write->calledWith('<info>Installing Bower dependencies for root project</info>'), $this->io->write->calledWith('Nothing to install'), $this->io->write->calledWith('<info>Installing Bower dependencies for Composer dependencies</info>'), $this->io->write->calledWith('Nothing to install')
+                $this->io->write->calledWith('<info>Installing Grunt dependencies for root project</info>'), $this->io->write->calledWith('Nothing to install'), $this->io->write->calledWith('<info>Installing Grunt dependencies for Composer dependencies</info>'), $this->io->write->calledWith('Nothing to install')
         );
     }
 
@@ -94,7 +94,7 @@ class BowerBridgeTest extends PHPUnit_Framework_TestCase {
         $this->bridge->update($this->composer);
 
         Phony::inOrder(
-                $this->io->write->calledWith('<info>Updating Bower dependencies for root project</info>'), $this->client->update->calledWith(), $this->client->install->calledWith(null, true), $this->io->write->calledWith('<info>Installing Bower dependencies for Composer dependencies</info>'), $this->io->write->calledWith('<info>Installing Bower dependencies for vendorA/packageA</info>'), $this->client->install->calledWith('/path/to/install/a', false), $this->io->write->calledWith('<info>Installing Bower dependencies for vendorB/packageB</info>'), $this->client->install->calledWith('/path/to/install/b', false)
+                $this->io->write->calledWith('<info>Updating Grunt dependencies for root project</info>'), $this->client->update->calledWith(), $this->client->install->calledWith(null, true), $this->io->write->calledWith('<info>Installing Grunt dependencies for Composer dependencies</info>'), $this->io->write->calledWith('<info>Installing Grunt dependencies for vendorA/packageA</info>'), $this->client->install->calledWith('/path/to/install/a', false), $this->io->write->calledWith('<info>Installing Grunt dependencies for vendorB/packageB</info>'), $this->client->install->calledWith('/path/to/install/b', false)
         );
     }
 
@@ -104,7 +104,7 @@ class BowerBridgeTest extends PHPUnit_Framework_TestCase {
         $this->bridge->update($this->composer);
 
         Phony::inOrder(
-                $this->io->write->calledWith('<info>Updating Bower dependencies for root project</info>'), $this->io->write->calledWith('Nothing to update'), $this->io->write->calledWith('<info>Installing Bower dependencies for Composer dependencies</info>'), $this->io->write->calledWith('Nothing to install')
+                $this->io->write->calledWith('<info>Updating Grunt dependencies for root project</info>'), $this->io->write->calledWith('Nothing to update'), $this->io->write->calledWith('<info>Installing Grunt dependencies for Composer dependencies</info>'), $this->io->write->calledWith('Nothing to install')
         );
     }
 

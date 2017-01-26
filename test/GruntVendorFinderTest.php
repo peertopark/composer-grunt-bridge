@@ -19,16 +19,16 @@ use Composer\Repository\ArrayRepository;
 use Eloquent\Phony\Phpunit\Phony;
 use PHPUnit_Framework_TestCase;
 
-class BowerVendorFinderTest extends PHPUnit_Framework_TestCase {
+class GruntVendorFinderTest extends PHPUnit_Framework_TestCase {
 
     protected function setUp() {
-        $this->finder = new BowerVendorFinder();
+        $this->finder = new GruntVendorFinder();
 
         $this->composer = new Composer();
         $this->repositoryManager = Phony::mock('Composer\Repository\RepositoryManager');
         $this->localRepository = new ArrayRepository();
 
-        $this->bridge = BowerBridgeFactory::create()->createBridge(new NullIO());
+        $this->bridge = GruntBridgeFactory::create()->createBridge(new NullIO());
 
         $this->packageA = new Package('vendorA/packageA', '1.0.0.0', '1.0.0');
         $this->packageB = new Package('vendorB/packageB', '1.0.0.0', '1.0.0');
@@ -38,10 +38,10 @@ class BowerVendorFinderTest extends PHPUnit_Framework_TestCase {
         $this->linkA1 = new Link('vendorA/packageA', 'vendorX/packageX');
         $this->linkA2 = new Link('vendorA/packageA', 'vendorY/packageY');
         $this->linkB1 = new Link('vendorB/packageB', 'vendorZ/packageZ');
-        $this->linkB2 = new Link('vendorB/packageB', 'peertopark/composer-bower-bridge');
+        $this->linkB2 = new Link('vendorB/packageB', 'peertopark/composer-grunt-bridge');
         $this->linkC1 = new Link('vendorC/packageC', 'vendorZ/packageZ');
-        $this->linkC2 = new Link('vendorC/packageC', 'peertopark/composer-bower-bridge');
-        $this->linkD1 = new Link('vendorD/packageD', 'peertopark/composer-bower-bridge');
+        $this->linkC2 = new Link('vendorC/packageC', 'peertopark/composer-grunt-bridge');
+        $this->linkD1 = new Link('vendorD/packageD', 'peertopark/composer-grunt-bridge');
         $this->linkD2 = new Link('vendorD/packageD', 'vendorZ/packageZ');
 
         $this->composer->setRepositoryManager($this->repositoryManager->mock());

@@ -17,7 +17,7 @@ use Composer\Package\PackageInterface;
 /**
  * Finds Grunt bridge enabled vendor packages.
  */
-class GruntVendorFinder implements GruntVendorFinderInterface {
+class GruntVendorFinder {
 	/**
 	 * Find all Grunt bridge enabled vendor packages.
 	 *
@@ -26,17 +26,14 @@ class GruntVendorFinder implements GruntVendorFinderInterface {
 	 *
 	 * @return array<integer,PackageInterface> The list of Grunt bridge enabled vendor packages.
 	 */
-	public function find( Composer $composer, GruntBridgeInterface $bridge ) {
-		$packages = $composer->getRepositoryManager()->getLocalRepository()
-		                     ->getPackages();
-
+	public function find( Composer $composer, GruntBridge $bridge ) {
+		$packages = $composer->getRepositoryManager()->getLocalRepository()->getPackages();
 		$dependantPackages = array();
 		foreach ( $packages as $package ) {
 			if ( $bridge->isDependantPackage( $package, false ) ) {
 				$dependantPackages[] = $package;
 			}
 		}
-
 		return $dependantPackages;
 	}
 }

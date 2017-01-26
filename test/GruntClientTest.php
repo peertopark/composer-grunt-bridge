@@ -16,69 +16,39 @@ use Eloquent\Phony\Phpunit\Phony;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Process\ExecutableFinder;
 
-class BowerClientTest extends PHPUnit_Framework_TestCase {
+class GruntClientTest extends PHPUnit_Framework_TestCase {
 
     protected function setUp() {
         $this->processExecutor = Phony::mock('Composer\Util\ProcessExecutor');
         $this->executableFinder = Phony::mock('Symfony\Component\Process\ExecutableFinder');
         $this->getcwd = Phony::stub();
         $this->chdir = Phony::stub();
-        $this->client = new BowerClient($this->processExecutor->mock(), $this->executableFinder->mock(), $this->getcwd, $this->chdir);
+        $this->client = new GruntClient($this->processExecutor->mock(), $this->executableFinder->mock(), $this->getcwd, $this->chdir);
 
         $this->processExecutor->execute('*')->returns(0);
-        $this->executableFinder->find('bower', 'node_modules/.bin/bower')->returns('/path/to/bower');
+        $this->executableFinder->find('grunt', 'node_modules/.bin/grunt')->returns('/path/to/grunt');
         $this->getcwd->returns('/path/to/cwd');
     }
 
-    public function testInstall() {
-        $this->assertNull($this->client->install('/path/to/project'));
-        $this->assertNull($this->client->install('/path/to/project'));
+    public function testRunTask() {
+        $this->assertNull($this->client->runTask(null));
         Phony::inOrder(
-                $this->executableFinder->find->calledWith('bower', 'node_modules/.bin/bower'), $this->chdir->calledWith('/path/to/project'), $this->processExecutor->execute->calledWith("'/path/to/bower' 'install'"), $this->chdir->calledWith('/path/to/cwd'), $this->chdir->calledWith('/path/to/project'), $this->processExecutor->execute->calledWith("'/path/to/bower' 'install'"), $this->chdir->calledWith('/path/to/cwd')
+                $this->executableFinder->find->calledWith('grunt', 'node_modules/.bin/grunt'), $this->chdir->calledWith('/path/to/project'), $this->processExecutor->execute->calledWith("'/path/to/grunt'"), $this->chdir->calledWith('/path/to/cwd'), $this->chdir->calledWith('/path/to/project'), $this->processExecutor->execute->calledWith("'/path/to/grunt'"), $this->chdir->calledWith('/path/to/cwd')
         );
     }
 
-    public function testInstallProductionMode() {
-        $this->assertNull($this->client->install('/path/to/project', false));
-        Phony::inOrder(
-                $this->executableFinder->find->calledWith('bower', 'node_modules/.bin/bower'), $this->chdir->calledWith('/path/to/project'), $this->processExecutor->execute->calledWith("'/path/to/bower' 'install' '--production'"), $this->chdir->calledWith('/path/to/cwd')
-        );
-    }
+    public function testInstallFailureGruntNotFound() {
+        $this->executableFinder->find('grunt', 'node_modules/.bin/grunt')->returns(null);
 
-    public function testInstallFailureBowerNotFound() {
-        $this->executableFinder->find('bower', 'node_modules/.bin/bower')->returns(null);
-
-        $this->setExpectedException('Peertopark\Composer\BowerBridge\Exception\BowerNotFoundException');
+        $this->setExpectedException('Peertopark\Composer\GruntBridge\Exception\GruntNotFoundException');
         $this->client->install('/path/to/project');
     }
 
     public function testInstallFailureCommandFailed() {
         $this->processExecutor->execute('*')->returns(1);
 
-        $this->setExpectedException('Peertopark\Composer\BowerBridge\Exception\BowerCommandFailedException');
+        $this->setExpectedException('Peertopark\Composer\GruntBridge\Exception\GruntCommandFailedException');
         $this->client->install('/path/to/project');
-    }
-
-    public function testUpdate() {
-        $this->assertNull($this->client->update('/path/to/project'));
-        $this->assertNull($this->client->update('/path/to/project'));
-        Phony::inOrder(
-                $this->executableFinder->find->calledWith('bower', 'node_modules/.bin/bower'), $this->chdir->calledWith('/path/to/project'), $this->processExecutor->execute->calledWith("'/path/to/bower' 'update'"), $this->chdir->calledWith('/path/to/cwd'), $this->chdir->calledWith('/path/to/project'), $this->processExecutor->execute->calledWith("'/path/to/bower' 'update'"), $this->chdir->calledWith('/path/to/cwd')
-        );
-    }
-
-    public function testUpdateFailureBowerNotFound() {
-        $this->executableFinder->find('bower', 'node_modules/.bin/bower')->returns(null);
-
-        $this->setExpectedException('Peertopark\Composer\BowerBridge\Exception\BowerNotFoundException');
-        $this->client->update('/path/to/project');
-    }
-
-    public function testUpdateFailureCommandFailed() {
-        $this->processExecutor->execute('*')->returns(1);
-
-        $this->setExpectedException('Peertopark\Composer\BowerBridge\Exception\BowerCommandFailedException');
-        $this->client->update('/path/to/project');
     }
 
 }

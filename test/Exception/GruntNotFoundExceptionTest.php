@@ -20,7 +20,7 @@ class GruntNotFoundExceptionTest extends PHPUnit_Framework_TestCase {
         $cause = new Exception();
         $exception = new GruntNotFoundException($cause);
 
-        $this->assertSame('The bower executable could not be found.', $exception->getMessage());
+        $this->assertSame('The grunt executable could not be found.', $exception->getMessage());
         $this->assertSame(0, $exception->getCode());
         $this->assertSame($cause, $exception->getPrevious());
     }

@@ -20,7 +20,7 @@ use Composer\Util\ProcessExecutor;
 /**
  * Runs Grunt tasks for Composer projects.
  */
-class GruntBridge implements GruntBridgeInterface {
+class GruntBridge {
 	/**
 	 * Construct a new Composer Grunt bridge plugin.
 	 *
@@ -30,18 +30,9 @@ class GruntBridge implements GruntBridgeInterface {
 	 */
 	public function __construct(
 		IOInterface $io = null,
-		GruntVendorFinderInterface $vendorFinder = null,
-		GruntClientInterface $client = null
+		GruntVendorFinder $vendorFinder = null,
+		GruntClient $client = null
 	) {
-		if ( null === $io ) {
-			$io = new NullIO;
-		}
-		if ( null === $vendorFinder ) {
-			$vendorFinder = new GruntVendorFinder;
-		}
-		if ( null === $client ) {
-			$client = new GruntClient( new ProcessExecutor( $io ) );
-		}
 
 		$this->io           = $io;
 		$this->vendorFinder = $vendorFinder;
