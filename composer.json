@@ -1,30 +1,41 @@
 {
-    "name": "johnpbloch/composer-grunt-bridge",
+    "name": "peertopark/composer-grunt-bridge",
     "description": "Grunt integration for Composer packages.",
     "keywords": ["composer", "grunt", "package", "integration", "bridge", "plugin", "composer-plugin"],
-    "homepage": "https://github.com/johnpbloch/composer-grunt-bridge",
+    "homepage": "https://github.com/peertopark/composer-grunt-bridge",
     "license": "MIT",
     "authors": [
         {
             "name": "John P Bloch",
             "email": "me@johnpbloch.com"
+        },
+        {
+            "name": "Hector Espert",
+            "email": "hespert@peertopark.com"
         }
     ],
     "type": "composer-plugin",
     "require": {
-        "php": ">=5.4",
+        "php": ">=5.3",
         "composer-plugin-api": "^1",
         "eloquent/composer-npm-bridge": "^3.0.1"
     },
     "require-dev": {
-        "composer/composer": "^1"
+        "composer/composer": "^1",
+        "eloquent/phony": "^0.8",
+        "phpunit/phpunit": "^4"
     },
     "autoload": {
         "psr-4": {
-            "JPB\\Composer\\GruntBridge\\": "src"
+            "Peertopark\\Composer\\GruntBridge\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Peertopark\\Composer\\GruntBridge\\": "test/"
         }
     },
     "extra": {
-        "class": "JPB\\Composer\\GruntBridge\\GruntBridgePlugin"
+        "class": "Peertopark\\Composer\\GruntBridge\\GruntBridgePlugin"
     }
 }

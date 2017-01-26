@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace JPB\Composer\GruntBridge;
+namespace Peertopark\Composer\GruntBridge;
 
 use Composer\Util\ProcessExecutor;
 use Symfony\Component\Process\ExecutableFinder;
@@ -36,6 +36,17 @@ class GruntClient implements GruntClientInterface {
 
         $this->processExecutor = $processExecutor;
         $this->executableFinder = $executableFinder;
+    }
+    
+    /**
+     * Create a new Grunt client.
+     *
+     * @return self The newly created client.
+     */
+    public static function create() {
+        $executor = new ProcessExecutor();
+        $finder = new ExecutableFinder();
+        return new self($executor, $finder);
     }
 
     /**

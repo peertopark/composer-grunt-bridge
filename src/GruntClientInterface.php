@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace JPB\Composer\GruntBridge;
+namespace Peertopark\Composer\GruntBridge;
 
 /**
  * The interface implemented by Grunt clients.

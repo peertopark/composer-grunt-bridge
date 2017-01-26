@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace JPB\Composer\GruntBridge;
+namespace Peertopark\Composer\GruntBridge;
 
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;

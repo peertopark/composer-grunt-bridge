@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace JPB\Composer\GruntBridge\Exception;
+namespace Peertopark\Composer\GruntBridge\Exception;
 
 use Exception;
 
