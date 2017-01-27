@@ -79,7 +79,7 @@ class GruntBridgePlugin implements PluginInterface, EventSubscriberInterface {
 	 * @throws Exception\GruntCommandFailedException If the operation fails.
 	 */
 	public function onPostUpdateCmd( Event $event ) {
-            $this->bridgeFactory->createBridge($event->getIO())->runGruntTasks( $event->getComposer(), true );
+            $this->bridgeFactory->createBridge( $event->getIO() )->runGruntTasks( $event->getComposer(), true );
 	}
         
 	private $bridgeFactory;

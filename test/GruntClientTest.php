@@ -33,7 +33,15 @@ class GruntClientTest extends PHPUnit_Framework_TestCase {
     public function testRunTask() {
         $this->assertNull($this->client->runTask(null));
         Phony::inOrder(
-                $this->executableFinder->find->calledWith('grunt', 'node_modules/.bin/grunt'), $this->chdir->calledWith('/path/to/project'), $this->processExecutor->execute->calledWith("'/path/to/grunt'"), $this->chdir->calledWith('/path/to/cwd'), $this->chdir->calledWith('/path/to/project'), $this->processExecutor->execute->calledWith("'/path/to/grunt'"), $this->chdir->calledWith('/path/to/cwd')
+                $this->executableFinder->find->calledWith('grunt', 'node_modules/.bin/grunt'), $this->processExecutor->execute->calledWith("'/path/to/grunt'")
+        );
+    }
+    
+    
+    public function testRunTestTask() {
+        $this->assertNull($this->client->runTask('test'));
+        Phony::inOrder(
+                $this->executableFinder->find->calledWith('grunt', 'node_modules/.bin/grunt'), $this->processExecutor->execute->calledWith("'/path/to/grunt' 'test'")
         );
     }
 
@@ -41,14 +49,14 @@ class GruntClientTest extends PHPUnit_Framework_TestCase {
         $this->executableFinder->find('grunt', 'node_modules/.bin/grunt')->returns(null);
 
         $this->setExpectedException('Peertopark\Composer\GruntBridge\Exception\GruntNotFoundException');
-        $this->client->install('/path/to/project');
+        $this->client->runTask(null);
     }
 
     public function testInstallFailureCommandFailed() {
         $this->processExecutor->execute('*')->returns(1);
 
         $this->setExpectedException('Peertopark\Composer\GruntBridge\Exception\GruntCommandFailedException');
-        $this->client->install('/path/to/project');
+        $this->client->runTask(null);
     }
 
 }

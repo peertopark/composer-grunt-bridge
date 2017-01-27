@@ -52,7 +52,7 @@ class GruntBridgePluginTest extends PHPUnit_Framework_TestCase {
         $this->plugin->onPostInstallCmd(new Event(ScriptEvents::POST_INSTALL_CMD, $this->composer, $this->io, true));
 
         Phony::inOrder(
-                $this->bridgeFactory->createBridge->calledWith($this->io), $this->bridge->install->calledWith($this->composer, true)
+                $this->bridgeFactory->createBridge->calledWith($this->io), $this->bridge->runGruntTasks->calledWith($this->composer, true)
         );
     }
 
@@ -60,7 +60,7 @@ class GruntBridgePluginTest extends PHPUnit_Framework_TestCase {
         $this->plugin->onPostInstallCmd(new Event(ScriptEvents::POST_INSTALL_CMD, $this->composer, $this->io, false));
 
         Phony::inOrder(
-                $this->bridgeFactory->createBridge->calledWith($this->io), $this->bridge->install->calledWith($this->composer, false)
+                $this->bridgeFactory->createBridge->calledWith($this->io), $this->bridge->runGruntTasks->calledWith($this->composer, false)
         );
     }
 
@@ -68,7 +68,7 @@ class GruntBridgePluginTest extends PHPUnit_Framework_TestCase {
         $this->plugin->onPostUpdateCmd(new Event(ScriptEvents::POST_UPDATE_CMD, $this->composer, $this->io));
 
         Phony::inOrder(
-                $this->bridgeFactory->createBridge->calledWith($this->io), $this->bridge->update->calledWith($this->composer)
+                $this->bridgeFactory->createBridge->calledWith($this->io), $this->bridge->runGruntTasks->calledWith($this->composer, true)
         );
     }
 

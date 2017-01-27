@@ -47,66 +47,22 @@ class GruntBridgeTest extends PHPUnit_Framework_TestCase {
     public function testInstall() {
         $this->rootPackage->setRequires(array($this->linkRoot1, $this->linkRoot2, $this->linkRoot3));
         $this->vendorFinder->find($this->composer, $this->bridge)->returns(array($this->packageA, $this->packageB));
-        $this->bridge->install($this->composer);
-
-        Phony::inOrder($this->io->write->calledWith('<info>Installing Grunt dependencies for root project</info>'), $this->client->install->calledWith(null, true), $this->io->write->calledWith('<info>Installing Grunt dependencies for Composer dependencies</info>'), $this->io->write->calledWith('<info>Installing Grunt dependencies for vendorA/packageA</info>'), $this->client->install->calledWith('/path/to/install/a', false), $this->io->write->calledWith('<info>Installing Grunt dependencies for vendorB/packageB</info>'), $this->client->install->calledWith('/path/to/install/b', false));
+        $this->bridge->runGruntTasks($this->composer);
+        Phony::inOrder($this->io->write->calledWith('<info>Running Grunt tasks for root project</info>'));
     }
 
-    public function testInstallProductionMode() {
-        $this->rootPackage->setRequires(array($this->linkRoot1, $this->linkRoot2, $this->linkRoot3));
-        $this->vendorFinder->find($this->composer, $this->bridge)->returns(array($this->packageA, $this->packageB));
-        $this->bridge->install($this->composer, false);
-
-        Phony::inOrder(
-                $this->io->write->calledWith('<info>Installing Grunt dependencies for root project</info>'), $this->client->install->calledWith(null, false), $this->io->write->calledWith('<info>Installing Grunt dependencies for Composer dependencies</info>'), $this->io->write->calledWith('<info>Installing Grunt dependencies for vendorA/packageA</info>'), $this->client->install->calledWith('/path/to/install/a', false), $this->io->write->calledWith('<info>Installing Grunt dependencies for vendorB/packageB</info>'), $this->client->install->calledWith('/path/to/install/b', false)
-        );
-    }
-
-    public function testInstallRootDevDependenciesInDevMode() {
-        $this->rootPackage->setDevRequires(array($this->linkRoot3));
-        $this->vendorFinder->find($this->composer, $this->bridge)->returns(array());
-        $this->bridge->install($this->composer, true);
-
-        $this->client->install->calledWith(null, true);
-    }
-
-    public function testInstallRootDevDependenciesInProductionMode() {
-        $this->rootPackage->setDevRequires(array($this->linkRoot3));
-        $this->vendorFinder->find($this->composer, $this->bridge)->returns(array());
-        $this->bridge->install($this->composer, false);
-
-        $this->client->install->never()->called();
-    }
-
-    public function testInstallNothing() {
-        $this->rootPackage->setRequires(array($this->linkRoot1, $this->linkRoot2));
-        $this->vendorFinder->find($this->composer, $this->bridge)->returns(array());
-        $this->bridge->install($this->composer);
-
-        Phony::inOrder(
-                $this->io->write->calledWith('<info>Installing Grunt dependencies for root project</info>'), $this->io->write->calledWith('Nothing to install'), $this->io->write->calledWith('<info>Installing Grunt dependencies for Composer dependencies</info>'), $this->io->write->calledWith('Nothing to install')
-        );
-    }
+   
 
     public function testUpdate() {
         $this->rootPackage->setRequires(array($this->linkRoot1, $this->linkRoot2, $this->linkRoot3));
         $this->vendorFinder->find($this->composer, $this->bridge)->returns(array($this->packageA, $this->packageB));
-        $this->bridge->update($this->composer);
+        $this->bridge->runGruntTasks($this->composer);
 
         Phony::inOrder(
-                $this->io->write->calledWith('<info>Updating Grunt dependencies for root project</info>'), $this->client->update->calledWith(), $this->client->install->calledWith(null, true), $this->io->write->calledWith('<info>Installing Grunt dependencies for Composer dependencies</info>'), $this->io->write->calledWith('<info>Installing Grunt dependencies for vendorA/packageA</info>'), $this->client->install->calledWith('/path/to/install/a', false), $this->io->write->calledWith('<info>Installing Grunt dependencies for vendorB/packageB</info>'), $this->client->install->calledWith('/path/to/install/b', false)
+                $this->io->write->calledWith('<info>Running Grunt tasks for root project</info>')
         );
     }
 
-    public function testUpdateNothing() {
-        $this->rootPackage->setRequires(array($this->linkRoot1, $this->linkRoot2));
-        $this->vendorFinder->find($this->composer, $this->bridge)->returns(array());
-        $this->bridge->update($this->composer);
-
-        Phony::inOrder(
-                $this->io->write->calledWith('<info>Updating Grunt dependencies for root project</info>'), $this->io->write->calledWith('Nothing to update'), $this->io->write->calledWith('<info>Installing Grunt dependencies for Composer dependencies</info>'), $this->io->write->calledWith('Nothing to install')
-        );
-    }
 
     public function testIsDependantPackage() {
         $this->packageA->setRequires(array($this->linkRoot3));

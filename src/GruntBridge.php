@@ -37,11 +37,10 @@ class GruntBridge {
     }
 
     public function runGruntTasks(Composer $composer, $isDevMode = null) {
-        $this->io->write('<info>Running Grunt tasks for root project<asdasd/info>');
+        $this->io->write('<info>Running Grunt tasks for root project</info>');
 
         if ($this->isDependantPackage($composer->getPackage(), $isDevMode)) {
             $tasks = $this->getTask($composer->getPackage());
-
             $this->client->runTask($tasks);
         } else {
             $this->write('Nothing to grunt');
