@@ -25,7 +25,6 @@ class GruntClient {
      *
      * @param ProcessExecutor|null  $processExecutor  The process executor to use.
      * @param ExecutableFinder|null $executableFinder The executable finder to use.
-     * @param Isolator|null         $isolator         The isolator to use.
      */
     public function __construct(ProcessExecutor $processExecutor = null, ExecutableFinder $executableFinder = null) {
         if (null === $processExecutor) {
@@ -98,8 +97,8 @@ class GruntClient {
         $command = implode(' ', array_map('escapeshellarg', $arguments));
 
         if (null !== $workingDirectoryPath) {
-            $previousWorkingDirectoryPath = $this->isolator()->getcwd();
-            $this->isolator()->chdir($workingDirectoryPath);
+            $previousWorkingDirectoryPath = call_user_func($this->getcwd);
+            call_user_func($this->chdir, $workingDirectoryPath);
         }
         
         throw new GruntCommandFailedException($command);

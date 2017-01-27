@@ -29,7 +29,7 @@ class GruntBridgePlugin implements PluginInterface, EventSubscriberInterface {
 	 */
 	public function __construct( GruntBridgeFactory $bridgeFactory = null ) {
 		if ( null === $bridgeFactory ) {
-			$bridgeFactory = new GruntBridgeFactory();
+			$bridgeFactory = GruntBridgeFactory::create();
 		}
 
 		$this->bridgeFactory = $bridgeFactory;
@@ -67,7 +67,7 @@ class GruntBridgePlugin implements PluginInterface, EventSubscriberInterface {
 	 * @throws Exception\GruntCommandFailedException If the operation fails.
 	 */
 	public function onPostInstallCmd( Event $event ) {
-            $this->bridgeFactory->create( $event->getIO() )->runGruntTasks( $event->getComposer(), $event->isDevMode() );
+            $this->bridgeFactory->createBridge( $event->getIO() )->runGruntTasks( $event->getComposer(), $event->isDevMode() );
 	}
 
 	/**
@@ -79,7 +79,7 @@ class GruntBridgePlugin implements PluginInterface, EventSubscriberInterface {
 	 * @throws Exception\GruntCommandFailedException If the operation fails.
 	 */
 	public function onPostUpdateCmd( Event $event ) {
-            $this->bridgeFactory->create($event->getIO())->runGruntTasks( $event->getComposer(), true );
+            $this->bridgeFactory->createBridge($event->getIO())->runGruntTasks( $event->getComposer(), true );
 	}
         
 	private $bridgeFactory;
