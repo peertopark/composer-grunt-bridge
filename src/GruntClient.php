@@ -100,8 +100,6 @@ class GruntClient {
             $previousWorkingDirectoryPath = call_user_func($this->getcwd);
             call_user_func($this->chdir, $workingDirectoryPath);
         }
-        
-        throw new GruntCommandFailedException($command);
 
         $exitCode = $this->processExecutor()->execute($command);
 

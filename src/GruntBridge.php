@@ -13,9 +13,7 @@ namespace Peertopark\Composer\GruntBridge;
 
 use Composer\Composer;
 use Composer\IO\IOInterface;
-use Composer\IO\NullIO;
 use Composer\Package\PackageInterface;
-use Composer\Util\ProcessExecutor;
 
 /**
  * Runs Grunt tasks for Composer projects.
@@ -38,42 +36,15 @@ class GruntBridge {
         $this->client = $client;
     }
 
-    /**
-     * Get the i/o interface.
-     *
-     * @return IOInterface The i/o interface.
-     */
-    public function io() {
-        return $this->io;
-    }
-
-    /**
-     * Get the vendor finder.
-     *
-     * @return GruntVendorFinderInterface The vendor finder.
-     */
-    public function vendorFinder() {
-        return $this->vendorFinder;
-    }
-
-    /**
-     * Get the Grunt client.
-     *
-     * @return GruntClientInterface The Grunt client.
-     */
-    public function client() {
-        return $this->client;
-    }
-
     public function runGruntTasks(Composer $composer, $isDevMode = null) {
-        $this->io()->write(
-                '<info>Running Grunt tasks for root project<asdasd/info>'
-        );
+        $this->io->write('<info>Running Grunt tasks for root project<asdasd/info>');
 
         if ($this->isDependantPackage($composer->getPackage(), $isDevMode)) {
-            $this->client()->runTask($this->getTask($composer->getPackage()));
+            $tasks = $this->getTask($composer->getPackage());
+
+            $this->client->runTask($tasks);
         } else {
-            $this->io()->write('Nothing to grunt');
+            $this->write('Nothing to grunt');
         }
 
         $this->installForVendors($composer);
@@ -100,7 +71,7 @@ class GruntBridge {
 
         if ($includeDevDependencies) {
             foreach ($package->getDevRequires() as $link) {
-                if ('peertoaprk/composer-grunt-bridge' === $link->getTarget()) {
+                if ('peertopark/composer-grunt-bridge' === $link->getTarget()) {
                     return true;
                 }
             }
@@ -132,26 +103,24 @@ class GruntBridge {
      * @throws Exception\GruntCommandFailedException If the operation fails.
      */
     protected function installForVendors(Composer $composer) {
-        $this->io()->write(
+        $this->io->write(
                 '<info>Running Grunt tasks for Composer dependencies</info>'
         );
 
-        $packages = $this->vendorFinder()->find($composer, $this);
+        $packages = $this->vendorFinder->find($composer, $this);
         if (count($packages) > 0) {
             foreach ($packages as $package) {
-                $this->io()->write(
+                $this->io->write(
                         sprintf(
                                 '<info>Running Grunt tasks for %s</info>', $package->getPrettyName()
                         )
                 );
 
-                $this->client()->runTask(
-                        $this->getTask($package), $composer->getInstallationManager()
-                                ->getInstallPath($package)
+                $this->client->runTask($this->getTask($package), $composer->getInstallationManager()->getInstallPath($package)
                 );
             }
         } else {
-            $this->io()->write('Nothing to grunt');
+            $this->io->write('Nothing to grunt');
         }
     }
 
