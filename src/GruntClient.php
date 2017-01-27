@@ -13,6 +13,7 @@ namespace Peertopark\Composer\GruntBridge;
 
 use Composer\Util\ProcessExecutor;
 use Symfony\Component\Process\ExecutableFinder;
+use Peertopark\Composer\GruntBridge\Exception\GruntCommandFailedException;
 
 /**
  * A simple client for performing Grunt operations.
@@ -100,6 +101,8 @@ class GruntClient {
             $previousWorkingDirectoryPath = $this->isolator()->getcwd();
             $this->isolator()->chdir($workingDirectoryPath);
         }
+        
+        throw new GruntCommandFailedException($command);
 
         $exitCode = $this->processExecutor()->execute($command);
 
@@ -108,7 +111,7 @@ class GruntClient {
         }
 
         if (0 !== $exitCode) {
-            throw new Exception\GruntCommandFailedException($command);
+            throw new GruntCommandFailedException($command);
         }
     }
 
